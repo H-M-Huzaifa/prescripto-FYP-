@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "613995925532",
+    "project_id": "prescripto-b77f2",
+    "storage_bucket": "prescripto-b77f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613995925532:android:dc6214eff58e0b00340fd9",
+        "android_client_info": {
+          "package_name": "com.example.prescripto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUsv4s-S-MEmGvgtkKztjVsmIotdKL7K0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613995925532:android:8190d15e001d4fb9340fd9",
+        "android_client_info": {
+          "package_name": "com.prescripto.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUsv4s-S-MEmGvgtkKztjVsmIotdKL7K0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
