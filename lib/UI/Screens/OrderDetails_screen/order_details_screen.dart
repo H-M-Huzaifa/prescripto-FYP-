@@ -13,7 +13,7 @@ class OrderDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     screen_config size=screen_config(context);
     return Scaffold(
-      backgroundColor: myColors.tertiary_color,
+      backgroundColor: myColors.secondary_color,
       body: Column(
         children: [
           // Appbar-like header
@@ -25,7 +25,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   fontFamily: 'Bebas',
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: myColors.secondary_color),
+                  color: myColors.primary_color),
             ),
           ),
           Expanded(

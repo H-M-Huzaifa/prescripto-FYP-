@@ -409,6 +409,33 @@ class class_all_products_provider with ChangeNotifier {
     },
   ];
 
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+//For fetching all Medicines from firestore
+  Future<List<Map<String, dynamic>>> fetchAllItemsFromFirebase() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('medicines').get();
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Function to fetch popular items from the 'medicines' collection
+  Future<List<Map<String, dynamic>>> fetchPopularItemsFromFirebase() async {
+    // Query the 'medicines' collection where 'isPopular' is true
+    QuerySnapshot snapshot = await _firestore
+        .collection('medicines')
+        .where('isPopular', isEqualTo: true)
+        .get();
+
+    // Mapping the documents to a list of Maps
+    return snapshot.docs.map((doc) {
+      return doc.data() as Map<String, dynamic>;
+    }).toList();
+  }
+
 }
 
 

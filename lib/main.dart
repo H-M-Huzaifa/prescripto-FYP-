@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:prescripto/UI/Screens/Bottom_nav_bar/nav_bar.dart';
 import 'package:prescripto/UI/Screens/all_products/all_products_provider.dart';
 import 'package:prescripto/UI/Screens/home_screen/home_screen.dart';
 import 'package:prescripto/UI/Screens/splash_screen/splash_screen.dart';
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: myColors.primary_color),
             useMaterial3: true,
           ),
-          home: home_screen(),
+          home: splash_screen(),
         ));
   }
 }

@@ -18,29 +18,28 @@ class bottom_nav_bar extends StatefulWidget {
 
 class _bottom_nav_barState extends State<bottom_nav_bar> {
   List<Widget> Screens = [
-    home_screen(),
-    all_products(),
     favourite_screen(),
+    all_products(),
+    home_screen(),
     OrderHistory(),
     user_profile(),
   ];
 
-  int selectedstate = 0;
+  int selectedstate = 2;
 
   List<TabItem> items = [
     TabItem(
-      icon: Icons.home,
-      title: 'Home',
+      icon: Icons.favorite_border,
+      title: 'Favourite',
     ),
     TabItem(
       icon: Icons.list,
       title: 'All Products',
     ),
     TabItem(
-      icon: Icons.favorite_border,
-      title: 'Favourite',
+      icon: Icons.home,
+      title: 'Home',
     ),
-
     TabItem(
       icon: Icons.history,
       title: 'History',
@@ -66,7 +65,7 @@ class _bottom_nav_barState extends State<bottom_nav_bar> {
         }),
         chipStyle: const ChipStyle(
           color: Colors.red,
-          background: myColors.secondary_color,
+          background: myColors.primary_color,
           convexBridge: false,
           notchSmoothness: NotchSmoothness.sharpEdge,
         ),

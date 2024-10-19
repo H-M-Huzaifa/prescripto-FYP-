@@ -14,11 +14,21 @@ class favourite_screen extends StatefulWidget {
 }
 
 class _favourite_screenState extends State<favourite_screen> {
+  String? userId;
+  @override
+  void initState() {
+    super.initState();
+    userId = FirebaseAuth.instance.currentUser?.uid; // Get current user's ID
+    if (userId != null) {
+      // Fetch user favorites from Firestore
+      Provider.of<class_fav_provider>(context, listen: false).fetchUserFavorites(userId!);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     screen_config size=screen_config(context);
     return Scaffold(
-      backgroundColor: myColors.tertiary_color,
+      backgroundColor: myColors.secondary_color,
       body: Center(
         child: Column(
           children: [
@@ -31,41 +41,50 @@ class _favourite_screenState extends State<favourite_screen> {
                   fontFamily: 'Bebas',
                   fontSize: size.text*1.2,
                   fontWeight: FontWeight.bold,
-                  color: myColors.secondary_color,
+                  color: myColors.primary_color,
                 ),
               ),
             ),
 
             // Favorite List
+            // Favorite List from Firestore
             Consumer<class_fav_provider>(
               builder: (context, vm, child) {
                 if (vm.favourites.isEmpty) {
-                  return Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/brokenheart.png',
-                        ),
-                        SizedBox(height: size.h*0.02),
-                        Text(
-                          "Oops! It seems you haven't liked anything yet.",
-                          style: TextStyle(
-                            fontFamily: 'Bebas',
-                            fontSize: size.text*1,
-                            color: myColors.secondary_color,
+                  return
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/brokenheart.png',
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                          SizedBox(height: size.h*0.02),
+                          Text(
+                            "Oops! It seems you haven't liked anything yet.",
+                            style: TextStyle(
+                              fontFamily: 'Bebas',
+                              fontSize: size.text*1,
+                              color: myColors.primary_color,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                 }
 
                 return Expanded(
                   child: ListView.builder(
                     itemCount: vm.favourites.length,
                     itemBuilder: (context, index) {
+                      final favoriteItem = vm.favourites[index];
+
+                      // Adding null safety checks with default values
+                      final image = favoriteItem['image'];
+                      final name = favoriteItem['name'] ?? 'Unknown Item';
+                      final price = favoriteItem['price'] ?? 'Price Unavailable';
+
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -87,25 +106,27 @@ class _favourite_screenState extends State<favourite_screen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Image.asset(vm.favourites[index]['image'],width: size.w*0.2,height: size.h*0.09,errorBuilder: (context, error, stackTrace) =>
+                                  Image.network(image,width: size.w*0.2,height: size.h*0.09,errorBuilder: (context, error, stackTrace) =>
                                       Icon(Icons.error),),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        vm.favourites[index]['name'],
+                                        name,
                                         style: TextStyle(
                                             fontFamily: 'Bebas', fontSize: size.text*0.9),
                                       ),
-                                      Text("Rs "+vm.favourites[index]['price']+"/-"),
+                                      Text("Rs "+price+"/-"),
                                     ],
                                   ),
-                              IconButton(
-                                     icon: Icon(Icons.delete),
-                                     onPressed: () {
-                                       vm.remove_fav_item(vm.favourites[index]);
-                                       }
-                                   ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      if (userId != null) {
+                                        vm.remove_fav_item(userId!, favoriteItem);
+                                      }
+                                    },
+                                  ),
 
                                 ],
                               ),

@@ -3,13 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:prescripto/UI/Screens/home_screen/home_screen_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../../Utilities/colors.dart';
 import '../../../Utilities/screen_size_config.dart';
+import '../Cart/Cart_screen.dart';
 import '../Cart/cart_provider.dart';
+import '../Product_Description_Screen/product_description.dart';
 import '../all_products/all_products_provider.dart';
+import '../favourites_screen/fav_provider.dart';
 import '../sign_in&up/signup_provider.dart';
 
 class home_screen extends StatefulWidget {
@@ -31,7 +35,7 @@ class _home_screenState extends State<home_screen> {
       backgroundColor: myColors.secondary_color,
 
       //Floating Button
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(tooltip: "Chat with AI",
           child: Image(
               height: size.h*0.04,
               image: AssetImage('assets/icons/chat.png')),
@@ -80,13 +84,13 @@ class _home_screenState extends State<home_screen> {
                           color: myColors.secondary_color),
                     ),
                     GestureDetector(
-                      // onTap: () {
-                      //   Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => cart(),
-                      //       ));
-                      // },
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => cart(),
+                            ));
+                      },
                       child: badges.Badge(position: badges.BadgePosition.topEnd(end: -10,top: -10),
                         badgeAnimation: badges.BadgeAnimation.slide(),
                         badgeContent: Text(
@@ -179,6 +183,8 @@ class _home_screenState extends State<home_screen> {
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
+                                final provider = Provider.of<class_homescreen_provider>(context, listen: false);
+                                provider.pickImage(context);
                               },
                               child: Container(
                                 height:45,
@@ -208,6 +214,14 @@ class _home_screenState extends State<home_screen> {
           ),
         ),
 
+        Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Text(
+            "Best Selling:",
+            style: TextStyle(
+                fontSize: size.text*1.2, fontFamily: 'Bebas', color: myColors.primary_color,fontWeight: FontWeight.bold),
+          ),
+        ),
 
 
 
@@ -242,7 +256,7 @@ class _home_screenState extends State<home_screen> {
                             MaterialPageRoute(
                               builder: (context) => product_description(
                                 name: list[index]['name'].toString(),
-                                image: list[index]['image_url'].toString(),
+                                image: list[index]['image'].toString(),
                                 description: list[index]['description'].toString(),
                                 size: list[index]['size'].toString(),
                                 price: list[index]['price'].toString(),
@@ -269,7 +283,7 @@ class _home_screenState extends State<home_screen> {
                             children: [
                               // Image
                               Image.network(
-                                list[index]['image_url'],
+                                list[index]['image'],
                                 width: size.w*0.5,
                                 height: size.h*0.12,
                                 errorBuilder: (context, error, stackTrace) =>
@@ -304,25 +318,25 @@ class _home_screenState extends State<home_screen> {
                                       ),
                                     ],
                                   ),
-                          Consumer<class_fav_provider>(
-                            builder: (context, vm, child) {
-                              return InkWell(
-                                onTap: () {
-                                  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-                                  if (userId.isNotEmpty) {
-                                    vm.favourites.contains(list[index])
-                                        ? vm.remove_fav_item(userId, list[index])
-                                        : vm.add_fav_item(userId, list[index]);
-                                  }
-                                },
-                                child: vm.favourites.contains(list[index])
-                                    ? Icon(Icons.favorite, color: Colors.red)
-                                    : Icon(Icons.favorite_outline),
-                              );
-                            },
-                          ),
+                                  Consumer<class_fav_provider>(
+                                    builder: (context, vm, child) {
+                                      return InkWell(
+                                        onTap: () {
+                                          String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                                          if (userId.isNotEmpty) {
+                                            vm.favourites.contains(list[index])
+                                                ? vm.remove_fav_item(userId, list[index])
+                                                : vm.add_fav_item(userId, list[index]);
+                                          }
+                                        },
+                                        child: vm.favourites.contains(list[index])
+                                            ? Icon(Icons.favorite, color: Colors.red)
+                                            : Icon(Icons.favorite_outline),
+                                      );
+                                    },
+                                  ),
 
-                          ],
+                                ],
                               ),
                             ],
                           ),

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../Utilities/colors.dart';
 import '../../../Utilities/screen_size_config.dart';
 import '../Cart/cart_provider.dart';
+import '../sign_in&up/signin.dart';
 import '../sign_in&up/signup_provider.dart';
 
 class user_profile extends StatefulWidget {
@@ -34,7 +35,7 @@ class _user_profileState extends State<user_profile> {
     final cartProvider = Provider.of<class_cart_provider>(context);
 
     return Scaffold(
-      backgroundColor: myColors.tertiary_color,
+      backgroundColor: myColors.secondary_color,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +51,7 @@ class _user_profileState extends State<user_profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
-                        color: myColors.secondary_color,
+                        color: myColors.primary_color,
                         Icons.arrow_back_ios_new,
                         size: size.w * 0.06,
                       ),
@@ -60,27 +61,27 @@ class _user_profileState extends State<user_profile> {
                           fontFamily: 'Bebas',
                           fontSize: size.text * 1.2,
                           fontWeight: FontWeight.bold,
-                          color: myColors.secondary_color,
+                          color: myColors.primary_color,
                         ),
                       ),
                       Consumer<class_sign_up_provider>(
                         builder: (context, vm, child) {
                           return GestureDetector(
-                            // onTap: () async {
-                            //   vm.clearImageData();
-                            //   await FirebaseAuth.instance.signOut().then((value) {
-                            //     cartProvider.clearCart();
-                            //   });
-                            //   Navigator.pushReplacement(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => signin(),
-                            //     ),
-                            //   );
-                            // },
+                            onTap: () async {
+                              vm.clearImageData();
+                              await FirebaseAuth.instance.signOut().then((value) {
+                                cartProvider.clearCart();
+                              });
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => signin(),
+                                ),
+                              );
+                            },
                             child: Icon(
                               Icons.logout,
-                              color: myColors.secondary_color,
+                              color: myColors.primary_color,
                               size: size.w * 0.06,
                             ),
                           );
@@ -162,7 +163,7 @@ class _user_profileState extends State<user_profile> {
                               ),
                             ),
                           ),
-            
+
                           // Email
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -198,7 +199,7 @@ class _user_profileState extends State<user_profile> {
                               ),
                             ),
                           ),
-            
+
                           // Address
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -234,7 +235,7 @@ class _user_profileState extends State<user_profile> {
                               ),
                             ),
                           ),
-            
+
                           // Phone
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -291,7 +292,7 @@ class _user_profileState extends State<user_profile> {
                           (value) => ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           duration: Duration(seconds: 2),
-                          backgroundColor: myColors.secondary_color,
+                          backgroundColor: myColors.primary_color,
                           content: Center(
                             child: Text(
                               "Profile Updated!",
