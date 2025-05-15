@@ -57,7 +57,7 @@ class _bottom_nav_barState extends State<bottom_nav_bar> {
       bottomNavigationBar: BottomBarInspiredOutside(
         items: items,
         backgroundColor: myColors.primary_color,
-        color: myColors.text_primary,
+        color: Colors.white,
         colorSelected: Colors.white,
         indexSelected: selectedstate,
         onTap: (index) => setState(() {

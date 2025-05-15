@@ -9,10 +9,12 @@ import 'package:badges/badges.dart' as badges;
 
 import '../../../Utilities/colors.dart';
 import '../../../Utilities/screen_size_config.dart';
+import '../../../upload_products.dart';
 import '../Cart/Cart_screen.dart';
 import '../Cart/cart_provider.dart';
 import '../Product_Description_Screen/product_description.dart';
 import '../all_products/all_products_provider.dart';
+import '../chatbot.dart';
 import '../favourites_screen/fav_provider.dart';
 import '../sign_in&up/signup_provider.dart';
 
@@ -26,6 +28,7 @@ class home_screen extends StatefulWidget {
 class _home_screenState extends State<home_screen> {
   @override
   Widget build(BuildContext context) {
+    UploadProducts myproducts =UploadProducts();
     screen_config size=screen_config(context);
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     final instance_cart_provider = Provider.of<class_cart_provider>(context);
@@ -40,7 +43,11 @@ class _home_screenState extends State<home_screen> {
               height: size.h*0.04,
               image: AssetImage('assets/icons/chat.png')),
           backgroundColor: myColors.primary_color,
-          onPressed: () {}),
+          onPressed: () {
+        //myproducts.uploadProducts();
+
+         Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot(),));
+          }),
 
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         //app bar
@@ -112,12 +119,12 @@ class _home_screenState extends State<home_screen> {
                 Container(
                     decoration:
                         BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff7D7D7D),
-                        spreadRadius: -15,
-                        blurRadius: 0,
-                        offset: Offset(-10, 10),
-                      ),
+                      // BoxShadow(
+                      //   color: Color(0xff7D7D7D),
+                      //   spreadRadius: -15,
+                      //   blurRadius: 0,
+                      //   offset: Offset(-10, 10),
+                      // ),
                     ]),
                     child: Image(
                       width: size.w*0.4,
@@ -150,7 +157,7 @@ class _home_screenState extends State<home_screen> {
           child: Padding(
             padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
             child: Container(
-              height: size.h*0.18,
+              height: size.h*0.17,
               width: size.w*0.9,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -174,12 +181,12 @@ class _home_screenState extends State<home_screen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text("Prescription",style: TextStyle(fontFamily: 'Bebas',fontWeight: FontWeight.bold, fontSize: 25 ),),
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text("Prescription",style: TextStyle(fontFamily: 'Bebas',fontWeight: FontWeight.bold, fontSize: size.text*1.3 ),),
                         ),
-                        Text("\nUpload your prescription\nand we will do the rest!"),
+                        Text("\nUpload your prescription\nand we will do the rest!",style: TextStyle(fontSize: size.text*0.7),),
                         Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.only(bottom: 10,top: 5, left: 10),
                           child: Center(
                             child: GestureDetector(
                               onTap: (){
@@ -187,8 +194,8 @@ class _home_screenState extends State<home_screen> {
                                 provider.pickImage(context);
                               },
                               child: Container(
-                                height:45,
-                                width: 150,
+                                height:size.h*0.04,
+                                width: size.w*0.4,
                                 decoration: BoxDecoration(boxShadow: [
                                   BoxShadow(
                                     color: Color(0xff7D7D7D),
@@ -198,7 +205,7 @@ class _home_screenState extends State<home_screen> {
                                   )
                                 ],
                                     color: myColors.primary_color,borderRadius: BorderRadius.circular(50)),
-                                child: Center(child: Text("Upload",style: TextStyle(color: Colors.white,fontSize: 20,fontFamily: 'Bebas'),)),
+                                child: Center(child: Text("Upload",style: TextStyle(color: Colors.white,fontSize: size.text*1,fontFamily: 'Bebas'),)),
                               ),
                             ),
                           ),
@@ -207,13 +214,14 @@ class _home_screenState extends State<home_screen> {
 
                     ),
                   ),
-                  Image(width:150,height: 150,image: AssetImage('assets/images/Upload_Prescription.png')),
+                  Image(width:size.w*0.28,image: AssetImage('assets/images/Upload_Prescription.png')),
                 ],
               ),
             ),
           ),
         ),
 
+        //Best Seling
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
@@ -225,8 +233,7 @@ class _home_screenState extends State<home_screen> {
 
 
 
-
-
+        //items
         Expanded(
           child: Container(
             child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -243,10 +250,9 @@ class _home_screenState extends State<home_screen> {
 
                 List<Map<String, dynamic>> list = snapshot.data!;
 
-                return GridView.builder(
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
                   itemCount: list.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 10, crossAxisSpacing: 5, crossAxisCount: 2),
                   itemBuilder: (context, index) {
                     return Center(
                       child: GestureDetector(
@@ -264,81 +270,85 @@ class _home_screenState extends State<home_screen> {
                             ),
                           );
                         },
-                        child: Container(
-                          width: size.w*0.4,
-                          //height: 250,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(22),
-                            boxShadow: [
-                              BoxShadow(
-                                color: myColors.textSecondary,
-                                spreadRadius: 2,
-                                blurRadius: 2,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              // Image
-                              Image.network(
-                                list[index]['image'],
-                                width: size.w*0.5,
-                                height: size.h*0.12,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Icon(Icons.error),
-                              ),
-                              // Name
-                              Text(
-                                list[index]['name'],
-                                style: TextStyle(
-                                  fontFamily: "Bebas",
-                                  fontSize: size.text*1,
-                                  fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Container(
+                            width: size.w*0.4,
+                            height: 250,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(22),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: myColors.textSecondary,
+                                  spreadRadius: 2,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 5),
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        list[index]['size'],
-                                        style: TextStyle(
-                                            fontFamily: "Bebas",
-                                            color: myColors.textSecondary,
-                                            fontSize: size.text*0.8),
-                                      ),
-                                      Text(
-                                        "Rs ${list[index]['price']+"/-"}",
-                                        style: TextStyle(
-                                            fontSize: size.text*0.8, fontFamily: "Bebas"),
-                                      ),
-                                    ],
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                // Image
+                                Image.network(
+                                  list[index]['image'],
+                                  width: size.w*0.5,
+                                  height: size.h*0.12,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.error),
+                                ),
+                                // Name
+                                Text(
+                                  list[index]['name'],
+                                  style: TextStyle(
+                                    fontFamily: "Bebas",
+                                    fontSize: size.text*1,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Consumer<class_fav_provider>(
-                                    builder: (context, vm, child) {
-                                      return InkWell(
-                                        onTap: () {
-                                          String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-                                          if (userId.isNotEmpty) {
-                                            vm.favourites.contains(list[index])
-                                                ? vm.remove_fav_item(userId, list[index])
-                                                : vm.add_fav_item(userId, list[index]);
-                                          }
-                                        },
-                                        child: vm.favourites.contains(list[index])
-                                            ? Icon(Icons.favorite, color: Colors.red)
-                                            : Icon(Icons.favorite_outline),
-                                      );
-                                    },
-                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          list[index]['size'],
+                                          style: TextStyle(
+                                              fontFamily: "Bebas",
+                                              color: myColors.textSecondary,
+                                              fontSize: size.text*0.8),
+                                        ),
+                                        Text(
+                                          "Rs ${list[index]['price']+"/-"}",
+                                          style: TextStyle(
+                                              fontSize: size.text*0.8, fontFamily: "Bebas"),
+                                        ),
+                                      ],
+                                    ),
+                                    Consumer<class_fav_provider>(
+                                      builder: (context, vm, child) {
+                                        return InkWell(
+                                          onTap: () {
+                                            String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                                            if (userId.isNotEmpty) {
+                                              vm.favourites.contains(list[index])
+                                                  ? vm.remove_fav_item(userId, list[index])
+                                                  : vm.add_fav_item(userId, list[index]);
+                                            }
+                                          },
+                                          child: vm.favourites.contains(list[index])
+                                              ? Icon(Icons.favorite, color: Colors.red)
+                                              : Icon(Icons.favorite_outline),
+                                        );
+                                      },
+                                    ),
 
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

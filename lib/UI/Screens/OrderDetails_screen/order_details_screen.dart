@@ -35,7 +35,8 @@ class OrderDetailsScreen extends StatelessWidget {
                 final item = order['cartItems'][index];
                 return ListTile(
                   title: Text(item['name']),
-                  trailing: Image.network(item['image']),
+                  trailing: Image.network(item['image'],errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.error),),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

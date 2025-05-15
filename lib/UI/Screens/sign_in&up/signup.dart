@@ -375,58 +375,58 @@ class _signupState extends State<signup> {
               ),
 
               //or signup with
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Center(
-                    child: Text(
-                      "or Signup with",
-                      style: TextStyle(fontSize: size.text*0.6,color: myColors.textSecondary),
-                    )),
-              ),
-
-              //Services Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //google
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      height: size.h*0.062,
-                      width: size.w*0.22,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: myColors.textSecondary),
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white),
-                      child: Center(
-                          child: Image(
-                              width: 25,
-                              height: 25,
-                              image: AssetImage('assets/icons/google.png'))),
-                    ),
-                  ),
-
-                  //facebook
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      height: size.h*0.062,
-                      width: size.w*0.22,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: myColors.textSecondary),
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white),
-                      child: Center(
-                          child: Image(
-                              width: 25,
-                              height: 25,
-                              image:
-                              AssetImage('assets/icons/facebook.png'))),
-                    ),
-                  ),
-                ],
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(20),
+              //   child: Center(
+              //       child: Text(
+              //         "or Signup with",
+              //         style: TextStyle(fontSize: size.text*0.6,color: myColors.textSecondary),
+              //       )),
+              // ),
+              //
+              // //Services Buttons
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   crossAxisAlignment: CrossAxisAlignment.center,
+              //   children: [
+              //     //google
+              //     Padding(
+              //       padding: const EdgeInsets.all(10),
+              //       child: Container(
+              //         height: size.h*0.062,
+              //         width: size.w*0.22,
+              //         decoration: BoxDecoration(
+              //             border: Border.all(color: myColors.textSecondary),
+              //             borderRadius: BorderRadius.circular(20),
+              //             color: Colors.white),
+              //         child: Center(
+              //             child: Image(
+              //                 width: 25,
+              //                 height: 25,
+              //                 image: AssetImage('assets/icons/google.png'))),
+              //       ),
+              //     ),
+              //
+              //     //facebook
+              //     Padding(
+              //       padding: const EdgeInsets.all(10),
+              //       child: Container(
+              //         height: size.h*0.062,
+              //         width: size.w*0.22,
+              //         decoration: BoxDecoration(
+              //             border: Border.all(color: myColors.textSecondary),
+              //             borderRadius: BorderRadius.circular(20),
+              //             color: Colors.white),
+              //         child: Center(
+              //             child: Image(
+              //                 width: 25,
+              //                 height: 25,
+              //                 image:
+              //                 AssetImage('assets/icons/facebook.png'))),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
               //Create Account
                 Center(
@@ -483,7 +483,7 @@ class _signupState extends State<signup> {
                                   // Show success message
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 2),
-                                    backgroundColor: myColors.primary_color,
+                                    backgroundColor: myColors.snackbar,
                                     content: Center(
                                       child: Text(
                                         "Account Created Successfully!",
@@ -499,7 +499,7 @@ class _signupState extends State<signup> {
 
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 2),
-                                    backgroundColor: myColors.primary_color,
+                                    backgroundColor: myColors.snackbar,
                                     content: Center(
                                       child: Text(
                                         "User creation failed!",
@@ -516,7 +516,7 @@ class _signupState extends State<signup> {
                                 // Show error message
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   duration: Duration(seconds: 2),
-                                  backgroundColor: myColors.primary_color,
+                                  backgroundColor: myColors.snackbar,
                                   content: Center(
                                     child: Text(
                                       error.toString(),
@@ -533,7 +533,7 @@ class _signupState extends State<signup> {
                               // Show error message
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 duration: Duration(seconds: 2),
-                                backgroundColor: myColors.primary_color,
+                                backgroundColor: myColors.snackbar,
                                 content: Center(
                                   child: Text(
                                     e.toString(),
@@ -546,7 +546,7 @@ class _signupState extends State<signup> {
                             // Passwords don't match
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               duration: Duration(seconds: 2),
-                              backgroundColor: myColors.primary_color,
+                              backgroundColor: myColors.snackbar,
                               content: Center(
                                 child: Text(
                                   "Password Didn't Matched!",
@@ -559,7 +559,7 @@ class _signupState extends State<signup> {
                           // Form validation failed
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             duration: Duration(seconds: 2),
-                            backgroundColor: myColors.primary_color,
+                            backgroundColor: myColors.snackbar,
                             content: Center(
                               child: Text(
                                 "Please Fill in the Required Fields",

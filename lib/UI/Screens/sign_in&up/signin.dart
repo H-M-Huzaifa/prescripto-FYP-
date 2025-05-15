@@ -168,7 +168,7 @@ class _signinState extends State<signin> {
                               });
                             }catch(e){
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 2),
-                                  backgroundColor: myColors.primary_color,
+                                  backgroundColor: myColors.snackbar,
                                   content: Center(
                                       child: Text(
                                         e.toString(),
@@ -179,7 +179,7 @@ class _signinState extends State<signin> {
 
                           }else{
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 2),
-                                backgroundColor: myColors.primary_color,
+                                backgroundColor: myColors.snackbar,
                                 content: Center(
                                     child: Text(
                                       "Please Fill in the Required Fields",
@@ -216,58 +216,58 @@ class _signinState extends State<signin> {
                   ),
 
                   //or login with
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Center(
-                        child: Text(
-                      "or login with",
-                      style: TextStyle(fontSize: size.text*0.6,color: myColors.textSecondary),
-                    )),
-                  ),
-
-                  //Services Buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //google
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          height: size.h*0.062,
-                          width: size.w*0.22,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: myColors.textSecondary),
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white),
-                          child: Center(
-                              child: Image(
-                                  width: size.w*0.07,
-                                  height: size.h*0.05,
-                                  image: AssetImage('assets/icons/google.png'))),
-                        ),
-                      ),
-
-                      //facebook
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          height: size.h*0.062,
-                          width: size.w*0.22,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: myColors.textSecondary),
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white),
-                          child: Center(
-                              child: Image(
-                                  width: size.w*0.07,
-                                  height: size.h*0.05,
-                                  image:
-                                      AssetImage('assets/icons/facebook.png'))),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(10),
+                  //   child: Center(
+                  //       child: Text(
+                  //     "or login with",
+                  //     style: TextStyle(fontSize: size.text*0.6,color: myColors.textSecondary),
+                  //   )),
+                  // ),
+                  //
+                  // //Services Buttons
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     //google
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(10),
+                  //       child: Container(
+                  //         height: size.h*0.062,
+                  //         width: size.w*0.22,
+                  //         decoration: BoxDecoration(
+                  //             border: Border.all(color: myColors.textSecondary),
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             color: Colors.white),
+                  //         child: Center(
+                  //             child: Image(
+                  //                 width: size.w*0.07,
+                  //                 height: size.h*0.05,
+                  //                 image: AssetImage('assets/icons/google.png'))),
+                  //       ),
+                  //     ),
+                  //
+                  //     //facebook
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(10),
+                  //       child: Container(
+                  //         height: size.h*0.062,
+                  //         width: size.w*0.22,
+                  //         decoration: BoxDecoration(
+                  //             border: Border.all(color: myColors.textSecondary),
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             color: Colors.white),
+                  //         child: Center(
+                  //             child: Image(
+                  //                 width: size.w*0.07,
+                  //                 height: size.h*0.05,
+                  //                 image:
+                  //                     AssetImage('assets/icons/facebook.png'))),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
 
                   //New to this platform
                   Consumer<class_sign_up_provider>(builder: (context, vm, child) {
