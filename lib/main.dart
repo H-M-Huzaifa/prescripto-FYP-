@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:prescripto/UI/Screens/Bottom_nav_bar/nav_bar.dart';
 import 'package:prescripto/UI/Screens/all_products/all_products_provider.dart';
 import 'package:prescripto/UI/Screens/home_screen/home_screen.dart';
+import 'package:prescripto/UI/Screens/results_screen/medicine_matcher_provider.dart';
 import 'package:prescripto/UI/Screens/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => class_checkout_provider()),
           ChangeNotifierProvider(create: (_) => OrderHistoryProvider()),
           ChangeNotifierProvider(create: (_) => class_all_products_provider()),
+          ChangeNotifierProvider(create: (_) => MedicineMatcherProvider()),
 
         ],
         child: MaterialApp(

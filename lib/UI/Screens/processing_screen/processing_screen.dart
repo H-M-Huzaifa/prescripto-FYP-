@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:prescripto/UI/Screens/results_screen/medicine_matcher_provider.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
+
+import '../results_screen/prescriptions_results_screen.dart';
 
 class ProcessingScreen extends StatefulWidget {
   final File imageFile;
@@ -17,6 +21,7 @@ class _ProcessingScreenState extends State<ProcessingScreen>
   late AnimationController _controller;
   late Animation<double> _animation;
   late double _screenHeight;
+  String _statusMessage = "Reading prescription...";
 
   @override
   void initState() {
@@ -26,18 +31,21 @@ class _ProcessingScreenState extends State<ProcessingScreen>
       duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
 
-    _analyzeImageWithAzure(); // No artificial delay
+    _analyzeImageWithAzure();
   }
 
   Future<void> _analyzeImageWithAzure() async {
-    final String endpoint =
-        'https://prescripto1-1.cognitiveservices.azure.com/';
-    final String subscriptionKey =
-        'FYouxBH18D57ufZzRASPSLXjSLRtnysBG6RoCTWb8U2h4opOxnTPJQQJ99BFACGhslBXJ3w3AAAFACOGe7Un';
-    final String url = '${endpoint}vision/v3.2/read/analyze';
+    final String endpoint = 'https://prescripto1-1.cognitiveservices.azure.com';
+    final String subscriptionKey = 'FYouxBH18D57ufZzRASPSLXjSLRtnysBG6RoCTWb8U2h4opOxnTPJQQJ99BFACGhslBXJ3w3AAAFACOGe7Un';
+    final String url = '$endpoint/vision/v3.2/read/analyze';
 
     try {
+      setState(() {
+        _statusMessage = "Uploading image...";
+      });
+
       final imageBytes = await widget.imageFile.readAsBytes();
+      print('Image size: ${imageBytes.length} bytes');
 
       // Step 1: Send Image
       final response = await http.post(
@@ -49,19 +57,31 @@ class _ProcessingScreenState extends State<ProcessingScreen>
         body: imageBytes,
       );
 
+      print('Initial response status: ${response.statusCode}');
+
       if (response.statusCode != 202) {
-        print('Failed to initiate OCR');
+        _handleError('Failed to initiate OCR. Status: ${response.statusCode}\nResponse: ${response.body}');
         return;
       }
 
       final operationLocation = response.headers['operation-location'];
       if (operationLocation == null) {
-        print('Operation location not found');
+        _handleError('Operation location not found in response headers');
         return;
       }
 
-      // Step 2: Poll for result
-      while (true) {
+      setState(() {
+        _statusMessage = "Processing image...";
+      });
+
+      // Step 2: Poll for result with timeout
+      int maxAttempts = 30;
+      int attempts = 0;
+
+      while (attempts < maxAttempts) {
+        await Future.delayed(Duration(seconds: 1));
+        attempts++;
+
         final pollResponse = await http.get(
           Uri.parse(operationLocation),
           headers: {
@@ -69,30 +89,101 @@ class _ProcessingScreenState extends State<ProcessingScreen>
           },
         );
 
+        if (pollResponse.statusCode != 200) {
+          _handleError('Failed to poll results. Status: ${pollResponse.statusCode}');
+          return;
+        }
+
         final Map<String, dynamic> pollResult = json.decode(pollResponse.body);
         final status = pollResult['status'];
 
         if (status == 'succeeded') {
-          final lines = pollResult['analyzeResult']['readResults'][0]['lines'];
-          List<String> extractedText =
-          lines.map<String>((line) => line['text']).toList();
+          setState(() {
+            _statusMessage = "Extracting text...";
+          });
 
-          // Navigate to result screen
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => ResultScreen(textLines: extractedText),
-            ),
-          );
+          try {
+            final analyzeResult = pollResult['analyzeResult'];
+            if (analyzeResult == null) {
+              _handleError('No analyze result found');
+              return;
+            }
+
+            final readResults = analyzeResult['readResults'];
+            if (readResults == null || readResults.isEmpty) {
+              _handleError('No read results found');
+              return;
+            }
+
+            final lines = readResults[0]['lines'];
+            if (lines == null) {
+              _handleError('No lines found in results');
+              return;
+            }
+
+            List<String> extractedText = [];
+            for (var line in lines) {
+              if (line['text'] != null) {
+                extractedText.add(line['text'].toString());
+              }
+            }
+
+            print('Extracted text: $extractedText');
+
+            // Navigate to enhanced result screen with provider
+            if (mounted) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider(
+                    create: (context) => MedicineMatcherProvider(),
+                    child: ResultScreen(textLines: extractedText),
+                  ),
+                ),
+              );
+            }
+          } catch (parseError) {
+            _handleError('Error parsing results: $parseError');
+          }
           break;
         } else if (status == 'failed') {
-          print('OCR failed');
+          _handleError('OCR processing failed');
           break;
+        } else if (status == 'running') {
+          setState(() {
+            _statusMessage = "Processing... ($attempts/30)";
+          });
         }
-
-        await Future.delayed(Duration(seconds: 1)); // Poll every 1 second
       }
+
+      if (attempts >= maxAttempts) {
+        _handleError('OCR processing timed out');
+      }
+
     } catch (e) {
       print('Error during OCR: $e');
+      _handleError('Error during OCR: $e');
+    }
+  }
+
+  void _handleError(String errorMessage) {
+    print('OCR Error: $errorMessage');
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Processing Error'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop(); // Go back to previous screen
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -181,11 +272,11 @@ class _ProcessingScreenState extends State<ProcessingScreen>
             Padding(
               padding: const EdgeInsets.only(bottom: 30),
               child: Column(
-                children: const [
+                children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 20),
                   Text(
-                    "Reading prescription...",
+                    _statusMessage,
                     style: TextStyle(
                       fontFamily: 'Bebas',
                       fontSize: 20,
@@ -201,30 +292,6 @@ class _ProcessingScreenState extends State<ProcessingScreen>
     );
   }
 }
-
-class ResultScreen extends StatelessWidget {
-  final List<String> textLines;
-
-  ResultScreen({required this.textLines});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(title: const Text("Extracted Text")),
-      body: textLines.isEmpty
-          ? const Center(child: Text("No text found."))
-          : ListView.builder(
-        itemCount: textLines.length,
-        itemBuilder: (context, index) => ListTile(
-          leading: Icon(Icons.text_snippet),
-          title: Text(textLines[index]),
-        ),
-      ),
-    );
-  }
-}
-
 
 // import 'package:flutter/material.dart';
 // import 'dart:async';
