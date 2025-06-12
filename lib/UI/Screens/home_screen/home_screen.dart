@@ -263,6 +263,7 @@ class _home_screenState extends State<home_screen> {
                               builder: (context) => product_description(
                                 name: list[index]['name'].toString(),
                                 image: list[index]['image'].toString(),
+                                generic:list[index]['generic'].toString(),
                                 description: list[index]['description'].toString(),
                                 size: list[index]['size'].toString(),
                                 price: list[index]['price'].toString(),
@@ -274,7 +275,7 @@ class _home_screenState extends State<home_screen> {
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Container(
                             width: size.w*0.4,
-                            height: 250,
+                            height: size.h*0.25,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(22),

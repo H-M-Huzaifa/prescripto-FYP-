@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 import '../../Utilities/colors.dart';
+import '../../Utilities/screen_size_config.dart';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
@@ -51,11 +52,15 @@ class _ChatbotState extends State<Chatbot> {
 
   @override
   Widget build(BuildContext context) {
+    screen_config size=screen_config(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: myColors.primary_color,
+        backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: const Text("Assistant"),
+        title:  Text("Chat with AI",style: TextStyle( fontFamily: 'Bebas',
+            fontSize: size.text*1.2,
+            fontWeight: FontWeight.bold,
+            color: myColors.primary_color),),
       ),
       body: _buildUI(),
     );
@@ -64,12 +69,12 @@ class _ChatbotState extends State<Chatbot> {
   Widget _buildUI() {
     return DashChat(
       inputOptions: InputOptions(
-        trailing: [
-          IconButton(
-            onPressed: _sendMediaMessage,
-            icon: const Icon(Icons.image),
-          )
-        ],
+        // trailing: [
+        //   IconButton(
+        //     onPressed: _sendMediaMessage,
+        //     icon: const Icon(Icons.image),
+        //   )
+        // ],
       ),
       currentUser: currentUser,
       onSend: _sendMessage,

@@ -58,16 +58,16 @@ class _signinState extends State<signin> {
                       child: Container(
                           decoration:
                               BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                            BoxShadow(
-                                color: Color(0xff7D7D7D),
-                                spreadRadius: -20,
-                                blurRadius: 0,
-                                offset: Offset(-12, 6))
+                            // BoxShadow(
+                            //     color: Color(0xff7D7D7D),
+                            //     spreadRadius: -20,
+                            //     blurRadius: 0,
+                            //     offset: Offset(-12, 6))
                           ]),
                           child: Image(
                             //height: size.h*0.6,
                             width: size.w*0.5,
-                            image: AssetImage('assets/images/logo.png'),
+                            image: AssetImage('assets/images/logo_dark.png'),
                           )),
                     ),
                   ),

@@ -72,6 +72,11 @@ class _splash_screenState extends State<splash_screen> {
                   //GoogleFonts.londrinaSolid(
                     //  color: myColors.text_se, fontSize: 20)
               ),
+              Text("Huzaifa, Rimsha & Raheel",
+                  style: TextStyle(fontSize: size.text,color: myColors.tertiary_color,fontFamily: 'Londrina')
+                  //GoogleFonts.londrinaSolid(
+                    //  color: myColors.text_se, fontSize: 20)
+              ),
                   // Image(
                   //   width: size.w*0.5,
                   //   image:AssetImage('assets/images/EB.png'),

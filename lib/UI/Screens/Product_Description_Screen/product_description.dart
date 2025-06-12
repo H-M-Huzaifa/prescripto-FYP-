@@ -18,11 +18,13 @@ class product_description extends StatefulWidget {
   String description;
   String size;
   String price;
+  String generic;
 
   product_description({
     super.key,
     required this.name,
     required this.image,
+    required this.generic,
     required this.description,
     required this.size,
     required this.price,
@@ -133,6 +135,19 @@ class _product_descriptionState extends State<product_description> {
                       ],
                     ),
                   ],
+                ),
+              ),
+            ),
+
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  widget.generic.toString(),
+                  style: TextStyle(
+                      fontSize: size.text * 0.8,
+                      color: Colors.grey),
                 ),
               ),
             ),
