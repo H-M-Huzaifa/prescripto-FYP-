@@ -10,6 +10,20 @@ class class_all_products_provider with ChangeNotifier {
 
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // Search medicines by name
+  Future<List<Map<String, dynamic>>> searchMedicines(String query) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('medicines')
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThan: query + 'z')
+          .get();
+
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    } catch (e) {
+      throw e;
+    }
+  }
 
 //For fetching all Medicines from firestore
   Future<List<Map<String, dynamic>>> fetchAllItemsFromFirebase() async {

@@ -26,6 +26,66 @@ class home_screen extends StatefulWidget {
 }
 
 class _home_screenState extends State<home_screen> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> _searchResults = [];
+  bool _isSearching = false;
+  FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() async {
+    if (_searchController.text.isEmpty) {
+      setState(() {
+        _isSearching = false;
+        _searchResults = [];
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+    });
+
+    final instance_all_products_provider = Provider.of<class_all_products_provider>(context, listen: false);
+    List<Map<String, dynamic>> allProducts = await instance_all_products_provider.fetchAllItemsFromFirebase();
+
+    setState(() {
+      _searchResults = allProducts.where((product) {
+        final name = product['name'].toString().toLowerCase();
+        final searchTerm = _searchController.text.toLowerCase();
+        return name.contains(searchTerm);
+      }).toList();
+    });
+  }
+
+  void _navigateToProduct(Map<String, dynamic> product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => product_description(
+          name: product['name'].toString(),
+          image: product['image'].toString(),
+          generic: product['generic'].toString(),
+          description: product['description'].toString(),
+          size: product['size'].toString(),
+          price: product['price'].toString(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     UploadProducts myproducts =UploadProducts();
@@ -135,7 +195,17 @@ class _home_screenState extends State<home_screen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
                   child: TextField(
-                    onTapOutside: (event) => () {},
+                    controller: _searchController,
+                    focusNode: _searchFocusNode,
+                    onTapOutside: (event) => () {
+                      // Close keyboard but keep search results visible
+                      FocusScope.of(context).unfocus();
+                    },
+                    onTap: (){
+                      setState(() {
+                        _isSearching = true;
+                      });
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search),
                       hintText: "Search",
@@ -152,216 +222,281 @@ class _home_screenState extends State<home_screen> {
           ),
         ),
 
-        //Prescription
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
-            child: Container(
-              height: size.h*0.17,
-              width: size.w*0.9,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xff7D7D7D),
-                    spreadRadius: 2,
-                    blurRadius: 7,
-                    offset: Offset(0, 10),
-                  )
-                ],
-                color: myColors.tertiary_color,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text("Prescription",style: TextStyle(fontFamily: 'Bebas',fontWeight: FontWeight.bold, fontSize: size.text*1.3 ),),
-                        ),
-                        Text("\nUpload your prescription\nand we will do the rest!",style: TextStyle(fontSize: size.text*0.7),),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10,top: 5, left: 10),
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: (){
-                                final provider = Provider.of<class_homescreen_provider>(context, listen: false);
-                                provider.pickImage(context);
-                              },
-                              child: Container(
-                                height:size.h*0.04,
-                                width: size.w*0.4,
-                                decoration: BoxDecoration(boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xff7D7D7D),
-                                    spreadRadius: -5,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 10),
-                                  )
-                                ],
-                                    color: myColors.primary_color,borderRadius: BorderRadius.circular(50)),
-                                child: Center(child: Text("Upload",style: TextStyle(color: Colors.white,fontSize: size.text*1,fontFamily: 'Bebas'),)),
-                              ),
-                            ),
+        if(!_isSearching || _searchController.text.isEmpty)...[
+          //Prescription
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
+              child: Container(
+                height: size.h*0.17,
+                width: size.w*0.9,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xff7D7D7D),
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(0, 10),
+                    )
+                  ],
+                  color: myColors.tertiary_color,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text("Prescription",style: TextStyle(fontFamily: 'Bebas',fontWeight: FontWeight.bold, fontSize: size.text*1.3 ),),
                           ),
-                        ),
-                      ],
-
-                    ),
-                  ),
-                  Image(width:size.w*0.28,image: AssetImage('assets/images/Upload_Prescription.png')),
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        //Best Seling
-        Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: Text(
-            "Best Selling:",
-            style: TextStyle(
-                fontSize: size.text*1.2, fontFamily: 'Bebas', color: myColors.primary_color,fontWeight: FontWeight.bold),
-          ),
-        ),
-
-
-
-        //items
-        Expanded(
-          child: Container(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: instance_all_products_provider
-                  .fetchPopularItemsFromFirebase(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text("No popular items found."));
-                }
-
-                List<Map<String, dynamic>> list = snapshot.data!;
-
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => product_description(
-                                name: list[index]['name'].toString(),
-                                image: list[index]['image'].toString(),
-                                generic:list[index]['generic'].toString(),
-                                description: list[index]['description'].toString(),
-                                size: list[index]['size'].toString(),
-                                price: list[index]['price'].toString(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Container(
-                            width: size.w*0.4,
-                            height: size.h*0.25,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(22),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: myColors.textSecondary,
-                                  spreadRadius: 2,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // Image
-                                Image.network(
-                                  list[index]['image'],
-                                  width: size.w*0.5,
-                                  height: size.h*0.12,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.error),
-                                ),
-                                // Name
-                                Text(
-                                  list[index]['name'],
-                                  style: TextStyle(
-                                    fontFamily: "Bebas",
-                                    fontSize: size.text*1,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          list[index]['size'],
-                                          style: TextStyle(
-                                              fontFamily: "Bebas",
-                                              color: myColors.textSecondary,
-                                              fontSize: size.text*0.8),
-                                        ),
-                                        Text(
-                                          "Rs ${list[index]['price']+"/-"}",
-                                          style: TextStyle(
-                                              fontSize: size.text*0.8, fontFamily: "Bebas"),
-                                        ),
-                                      ],
-                                    ),
-                                    Consumer<class_fav_provider>(
-                                      builder: (context, vm, child) {
-                                        return InkWell(
-                                          onTap: () {
-                                            String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-                                            if (userId.isNotEmpty) {
-                                              vm.favourites.contains(list[index])
-                                                  ? vm.remove_fav_item(userId, list[index])
-                                                  : vm.add_fav_item(userId, list[index]);
-                                            }
-                                          },
-                                          child: vm.favourites.contains(list[index])
-                                              ? Icon(Icons.favorite, color: Colors.red)
-                                              : Icon(Icons.favorite_outline),
-                                        );
-                                      },
-                                    ),
-
+                          Text("\nUpload your prescription\nand we will do the rest!",style: TextStyle(fontSize: size.text*0.7),),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10,top: 5, left: 10),
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: (){
+                                  final provider = Provider.of<class_homescreen_provider>(context, listen: false);
+                                  provider.pickImage(context);
+                                },
+                                child: Container(
+                                  height:size.h*0.04,
+                                  width: size.w*0.4,
+                                  decoration: BoxDecoration(boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xff7D7D7D),
+                                      spreadRadius: -5,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 10),
+                                    )
                                   ],
+                                      color: myColors.primary_color,borderRadius: BorderRadius.circular(50)),
+                                  child: Center(child: Text("Upload",style: TextStyle(color: Colors.white,fontSize: size.text*1,fontFamily: 'Bebas'),)),
                                 ),
-                              ],
+                              ),
+                            ),
+                          ),
+                        ],
+
+                      ),
+                    ),
+                    Image(width:size.w*0.28,image: AssetImage('assets/images/Upload_Prescription.png')),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          //Best Seling
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              "Best Selling:",
+              style: TextStyle(
+                  fontSize: size.text*1.2, fontFamily: 'Bebas', color: myColors.primary_color,fontWeight: FontWeight.bold),
+            ),
+          ),
+
+
+
+          //items
+          Expanded(
+            child: Container(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: instance_all_products_provider
+                    .fetchPopularItemsFromFirebase(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text("No popular items found."));
+                  }
+
+                  List<Map<String, dynamic>> list = snapshot.data!;
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      return Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => product_description(
+                                  name: list[index]['name'].toString(),
+                                  image: list[index]['image'].toString(),
+                                  generic:list[index]['generic'].toString(),
+                                  description: list[index]['description'].toString(),
+                                  size: list[index]['size'].toString(),
+                                  price: list[index]['price'].toString(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Container(
+                              width: size.w*0.4,
+                              height: size.h*0.25,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(22),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: myColors.textSecondary,
+                                    spreadRadius: 2,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  // Image
+                                  Image.network(
+                                    list[index]['image'],
+                                    width: size.w*0.5,
+                                    height: size.h*0.12,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Icon(Icons.error),
+                                  ),
+                                  // Name
+                                  Text(
+                                    list[index]['name'],
+                                    style: TextStyle(
+                                      fontFamily: "Bebas",
+                                      fontSize: size.text*1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            list[index]['size'],
+                                            style: TextStyle(
+                                                fontFamily: "Bebas",
+                                                color: myColors.textSecondary,
+                                                fontSize: size.text*0.8),
+                                          ),
+                                          Text(
+                                            "Rs ${list[index]['price']+"/-"}",
+                                            style: TextStyle(
+                                                fontSize: size.text*0.8, fontFamily: "Bebas"),
+                                          ),
+                                        ],
+                                      ),
+                                      Consumer<class_fav_provider>(
+                                        builder: (context, vm, child) {
+                                          return InkWell(
+                                            onTap: () {
+                                              String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                                              if (userId.isNotEmpty) {
+                                                vm.favourites.contains(list[index])
+                                                    ? vm.remove_fav_item(userId, list[index])
+                                                    : vm.add_fav_item(userId, list[index]);
+                                              }
+                                            },
+                                            child: vm.favourites.contains(list[index])
+                                                ? Icon(Icons.favorite, color: Colors.red)
+                                                : Icon(Icons.favorite_outline),
+                                          );
+                                        },
+                                      ),
+
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
-        ),
-
-      ]),
+        ],
+        // Search results overlay
+        if (_isSearching && _searchController.text.isNotEmpty)
+          Positioned(
+            top: size.h * 0.3, // Position below the search bar
+            left: 25,
+            right: 25,
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: size.h * 0.5, // Limit height of dropdown
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 5),
+                )],
+              ),
+              child: _searchResults.isEmpty
+                  ? Padding(
+                padding: EdgeInsets.all(16),
+                child: Text("No medicines found",
+                    style: TextStyle(fontFamily: "Bebas")),
+              )
+                  : ListView.builder(
+                shrinkWrap: true,
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final product = _searchResults[index];
+                  return ListTile(
+                    leading: Image.network(
+                      product['image'],
+                      width: 40,
+                      height: 40,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(Icons.medication),
+                    ),
+                    title: Text(
+                      product['name'],
+                      style: TextStyle(fontFamily: "Bebas"),
+                    ),
+                    subtitle: Text(
+                      "Rs ${product['price']}",
+                      style: TextStyle(fontFamily: "Bebas"),
+                    ),
+                    onTap: () {
+                      _navigateToProduct(product);
+                      setState(() {
+                        _isSearching = false;
+                        _searchController.clear();
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+      ],
+      ),
     );
   }
 }
+
+
+
+
