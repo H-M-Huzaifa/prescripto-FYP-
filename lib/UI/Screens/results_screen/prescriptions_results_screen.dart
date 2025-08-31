@@ -3,6 +3,7 @@ import 'package:prescripto/UI/Screens/favourites_screen/fav_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'medicine_matcher_provider.dart';
+import '../Product_Description_Screen/product_description.dart'; // Add this import
 
 class ResultScreen extends StatefulWidget {
   final List<String> textLines;
@@ -34,7 +35,23 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
-  @override
+  // Add navigation method
+  void _navigateToProduct(Map<String, dynamic> medicine) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => product_description(
+          name: medicine['name'].toString(),
+          image: medicine['image'].toString(),
+          generic: medicine['generic'].toString(),
+          description: medicine['description'].toString(),
+          size: medicine['size'].toString(),
+          price: medicine['price'].toString(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +67,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
-                    child: Icon(Icons.arrow_back_ios_new, color: Color(0xff1F509A)),
+                    child: const Icon(Icons.arrow_back_ios_new, color: Color(0xff1F509A)),
                   ),
-                  Text(
+                  const Text(
                     "Prescription Analysis",
                     style: TextStyle(
                       fontFamily: 'Bebas',
@@ -61,7 +78,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                       color: Color(0xff1F509A),
                     ),
                   ),
-                 SizedBox(),
+                  // This SizedBox now balances the space taken by the Icon,
+                  // perfectly centering the title.
+                  const SizedBox(width: 24.0),
                 ],
               ),
             ),
@@ -71,7 +90,7 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(3, (index) {
+                children: List.generate(0, (index) { // Changed from 1 to 3
                   final isActive = _tabController.index == index;
                   final titles = ['Available', 'Not Found', 'Raw Text'];
                   final colors = [
@@ -285,132 +304,163 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
   }
 
   Widget _buildMedicineCard(Map<String, dynamic> medicine, {required bool isAvailable}) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 12),
-      elevation: 3,
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Medicine Image (if available)
-                if (isAvailable && medicine['image'] != null)
-                  Container(
-                    width: 60,
-                    height: 60,
-                    margin: EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(7),
-                      child: Image.network(
-                        medicine['image'],
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Icon(Icons.medication, color: Colors.grey),
-                      ),
-                    ),
-                  ),
-
-                // Medicine Details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Medicine Name
-                      Text(
-                        isAvailable ? medicine['name'] : medicine['extractedName'],
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isAvailable ? Colors.black : Colors.grey[700],
-                        ),
-                      ),
-
-                      SizedBox(height: 4),
-
-                      // Extracted vs Matched Name
-                      if (isAvailable && medicine['extractedName'] != medicine['name'])
-                        Text(
-                          "From prescription: ${medicine['extractedName']}",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-
-                      SizedBox(height: 8),
-
-                      // Match Type Badge
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: isAvailable ? Colors.green.shade100 : Colors.red.shade100,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          isAvailable ? medicine['matchType'] : 'Not Available',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: isAvailable ? Colors.green.shade700 : Colors.red.shade700,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Status Icon
-                Icon(
-                  isAvailable ? Icons.check_circle : Icons.cancel,
-                  color: isAvailable ? Colors.green : Colors.red,
-                  size: 28,
-                ),
-              ],
-            ),
-
-            // Additional Details for Available Medicines
-            if (isAvailable) ...[
-              Divider(height: 20),
+    return GestureDetector( // Wrap the entire card with GestureDetector
+      onTap: () {
+        // Only navigate if medicine is available and has required data
+        if (isAvailable &&
+            medicine['name'] != null &&
+            medicine['image'] != null &&
+            medicine['generic'] != null &&
+            medicine['description'] != null &&
+            medicine['size'] != null &&
+            medicine['price'] != null) {
+          _navigateToProduct(medicine);
+        }
+      },
+      child: Card(
+        margin: EdgeInsets.only(bottom: 12),
+        elevation: 3,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Medicine Image (if available)
+                  if (isAvailable && medicine['image'] != null)
+                    Container(
+                      width: 60,
+                      height: 60,
+                      margin: EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(7),
+                        child: Image.network(
+                          medicine['image'],
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Icon(Icons.medication, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+
+                  // Medicine Details
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (medicine['generic'] != null && medicine['generic'].toString().isNotEmpty)
-                          Text(
-                            "Generic: ${medicine['generic']}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        // Medicine Name
+                        Text(
+                          isAvailable ? medicine['name'] : medicine['extractedName'],
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isAvailable ? Colors.black : Colors.grey[700],
                           ),
-                        if (medicine['size'] != null)
+                        ),
+
+                        SizedBox(height: 4),
+
+                        // Extracted vs Matched Name
+                        if (isAvailable && medicine['extractedName'] != medicine['name'])
                           Text(
-                            "Size: ${medicine['size']}",
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            "From prescription: ${medicine['extractedName']}",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
+
+                        SizedBox(height: 8),
+
+                        // Match Type Badge
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: isAvailable ? Colors.green.shade100 : Colors.red.shade100,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            isAvailable ? medicine['matchType'] : 'Not Available',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isAvailable ? Colors.green.shade700 : Colors.red.shade700,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  if (medicine['price'] != null)
-                    Text(
-                      "Rs ${medicine['price']}/-",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue.shade700,
-                      ),
-                    ),
+
+                  // Status Icon with tap indication for available medicines
+                  Icon(
+                    isAvailable ? Icons.check_circle : Icons.cancel,
+                    color: isAvailable ? Colors.green : Colors.red,
+                    size: 28,
+                  ),
                 ],
               ),
+
+              // Additional Details for Available Medicines
+              if (isAvailable) ...[
+                Divider(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (medicine['generic'] != null && medicine['generic'].toString().isNotEmpty)
+                            Text(
+                              "Generic: ${medicine['generic']}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            ),
+                          if (medicine['size'] != null)
+                            Text(
+                              "Size: ${medicine['size']}",
+                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            ),
+                        ],
+                      ),
+                    ),
+                    if (medicine['price'] != null)
+                      Text(
+                        "Rs ${medicine['price']}/-",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                  ],
+                ),
+                // Add a subtle indication that the card is tappable
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.touch_app, size: 16, color: Colors.grey[400]),
+                    SizedBox(width: 4),
+                    Text(
+                      "Tap for details",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[500],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

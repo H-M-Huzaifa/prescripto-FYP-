@@ -1,24 +1,32 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class class_prod_desc with ChangeNotifier{
+class class_prod_desc extends ChangeNotifier {
+  int _quantity = 1;
 
-  int _quantity = 1; // Add a quantity field
-  int get quantity => _quantity; // Add a quantity field
+  int get quantity => _quantity;
 
-  void quantity_decrement(){
-    if(_quantity>1){
+  void quantity_increment() {
+    _quantity++;
+    notifyListeners();
+  }
+
+  void quantity_decrement() {
+    if (_quantity > 1) {
       _quantity--;
       notifyListeners();
     }
   }
 
-  void quantity_increment(){
-    _quantity++;
+  void reset_quantity() {
+    _quantity = 1;
     notifyListeners();
   }
 
-  void reset_quantity(){
-    _quantity=1;
-    notifyListeners();
+  // Add this method to set a specific quantity value
+  void set_quantity(int newQuantity) {
+    if (newQuantity > 0) {
+      _quantity = newQuantity;
+      notifyListeners();
+    }
   }
 }

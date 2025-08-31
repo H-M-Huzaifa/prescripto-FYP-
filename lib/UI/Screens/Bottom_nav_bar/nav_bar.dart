@@ -17,14 +17,6 @@ class bottom_nav_bar extends StatefulWidget {
 }
 
 class _bottom_nav_barState extends State<bottom_nav_bar> {
-  List<Widget> Screens = [
-    favourite_screen(),
-    all_products(),
-    home_screen(),
-    OrderHistory(),
-    user_profile(),
-  ];
-
   int selectedstate = 2;
 
   List<TabItem> items = [
@@ -52,6 +44,19 @@ class _bottom_nav_barState extends State<bottom_nav_bar> {
 
   @override
   Widget build(BuildContext context) {
+    // Screens list moved inside build method to access instance members
+    List<Widget> Screens = [
+      favourite_screen(),
+      all_products(),
+      home_screen(onAvatarTap: () {
+        setState(() {
+          selectedstate = 4; // Index 4 is the Profile tab
+        });
+      }),
+      OrderHistory(),
+      user_profile(),
+    ];
+
     return Scaffold(
       body: IndexedStack(index: selectedstate, children: Screens),
       bottomNavigationBar: BottomBarInspiredOutside(

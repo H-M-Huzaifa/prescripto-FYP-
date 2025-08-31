@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../Utilities/colors.dart';
 import '../../../Utilities/screen_size_config.dart';
 import '../Checkout_Screen/Checkout.dart';
+import '../Product_Description_Screen/product_description.dart';
 import 'cart_provider.dart';
 
 class cart extends StatefulWidget {
@@ -26,13 +27,33 @@ class _cartState extends State<cart> {
             //app bar
             Padding(
               padding: const EdgeInsets.only(top: 50),
-              child: Text(
-                "Cart",
-                style: TextStyle(
-                    fontFamily: 'Bebas',
-                    fontSize: size.text * 1.2,
-                    fontWeight: FontWeight.bold,
-                    color: myColors.primary_color),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      color: myColors.primary_color,
+                      Icons.arrow_back_ios_new,
+                      size: size.w * 0.06,
+                    ),
+                  ),
+                  Text(
+                    "Cart",
+                    style: TextStyle(
+                      fontFamily: 'Bebas',
+                      fontSize: size.text * 1.2,
+                      fontWeight: FontWeight.bold,
+                      color: myColors.primary_color,
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.w * 0.06, // Same width as the back icon for balance
+                  ),
+                ],
               ),
             ),
 
@@ -45,7 +66,7 @@ class _cartState extends State<cart> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset(height: size.h*0.3,
+                        Image.asset(height: size.h*0.2,
                           'assets/images/shoppingbag.png', // Replace with your image path
                         ),
                         SizedBox(height: size.h*0.02),
@@ -72,77 +93,97 @@ class _cartState extends State<cart> {
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.all(12),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: myColors.textSecondary,
-                                        spreadRadius: 2,
-                                        blurRadius: 2,
-                                        offset: Offset(0, 5),
-                                      ),
-                                    ],
-                                  ),
-                                  width: double.infinity,
-                                  height: size.h * 0.14,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Image(
-                                        height: size.h * 0.09,
-                                        image: NetworkImage(vm.cart_items[index]['image']),
-                                        errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                                            child: Text(
-                                              vm.cart_items[index]['name'],
-                                              style: TextStyle(
-                                                  color: myColors.primary_color,
-                                                  fontSize: size.text * 1.2,
-                                                  fontFamily: 'Bebas'),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                                            child: Text(
-                                              vm.cart_items[index]['size'] + "  x" + vm.cart_items[index]['quantity'].toString(),
-                                              style: TextStyle(
-                                                  color: myColors.textSecondary,
-                                                  fontSize: size.text * 1,
-                                                  fontFamily: 'Bebas'),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                                            child: Text(
-                                              "Rs " + vm.cart_items[index]['finalprice'].toString() + "/-",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: size.text * 1,
-                                                  fontFamily: 'Bebas'),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 50),
-                                        child: InkWell(
-                                          onTap: () {
-                                            vm.remove_cart_item(vm.cart_items[index]);
-                                          },
-                                          child: Icon(
-                                            Icons.delete,
-                                            size: size.h * 0.027,
-                                            color: myColors.primary_color,
-                                          ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Get the current cart item
+                                    final currentItem = vm.cart_items[index];
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => product_description(
+                                          name: currentItem['name'].toString(),
+                                          image: currentItem['image'].toString(),
+                                          generic: currentItem['generic'].toString() ?? '',
+                                          description: currentItem['description'].toString() ?? '',
+                                          size: currentItem['size'].toString(),
+                                          price: currentItem['price'].toString(),
+                                          initialQuantity: currentItem['quantity'], // This preserves the cart quantity
                                         ),
                                       ),
-                                    ],
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: myColors.textSecondary,
+                                          spreadRadius: 2,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 5),
+                                        ),
+                                      ],
+                                    ),
+                                    width: double.infinity,
+                                    height: size.h * 0.14,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Image(
+                                          height: size.h * 0.09,
+                                          image: NetworkImage(vm.cart_items[index]['image']),
+                                          errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                              child: Text(
+                                                vm.cart_items[index]['name'],
+                                                style: TextStyle(
+                                                    color: myColors.primary_color,
+                                                    fontSize: size.text * 1.2,
+                                                    fontFamily: 'Bebas'),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                              child: Text(
+                                                vm.cart_items[index]['size'] + "  x" + vm.cart_items[index]['quantity'].toString(),
+                                                style: TextStyle(
+                                                    color: myColors.textSecondary,
+                                                    fontSize: size.text * 1,
+                                                    fontFamily: 'Bebas'),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                              child: Text(
+                                                "Rs " + vm.cart_items[index]['finalprice'].toString() + "/-",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: size.text * 1,
+                                                    fontFamily: 'Bebas'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 50),
+                                          child: InkWell(
+                                            onTap: () {
+                                              vm.remove_cart_item(vm.cart_items[index]);
+                                            },
+                                            child: Icon(
+                                              Icons.delete,
+                                              size: size.h * 0.027,
+                                              color: myColors.primary_color,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

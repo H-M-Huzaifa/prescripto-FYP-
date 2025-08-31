@@ -35,8 +35,8 @@ class _ProcessingScreenState extends State<ProcessingScreen>
   }
 
   Future<void> _analyzeImageWithAzure() async {
-    final String endpoint = 'https://prescripto1-1.cognitiveservices.azure.com';
-    final String subscriptionKey = 'FYouxBH18D57ufZzRASPSLXjSLRtnysBG6RoCTWb8U2h4opOxnTPJQQJ99BFACGhslBXJ3w3AAAFACOGe7Un';
+    final String endpoint = 'https://cvprescripto.cognitiveservices.azure.com/';
+    final String subscriptionKey = '8mkpFORyMRYHuRdMyVi5XolYU2E4yz8qpcTmcOlK3Z48JIzVDGmDJQQJ99BHACqBBLyXJ3w3AAAFACOGqve1';
     final String url = '$endpoint/vision/v3.2/read/analyze';
 
     try {

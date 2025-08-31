@@ -19,6 +19,7 @@ class product_description extends StatefulWidget {
   String size;
   String price;
   String generic;
+  int? initialQuantity; // Add optional initial quantity parameter
 
   product_description({
     super.key,
@@ -28,6 +29,7 @@ class product_description extends StatefulWidget {
     required this.description,
     required this.size,
     required this.price,
+    this.initialQuantity, // Optional parameter
   });
 
   @override
@@ -44,10 +46,16 @@ class _product_descriptionState extends State<product_description> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<class_prod_desc>(context, listen: false).reset_quantity();
+      final prodDescProvider = Provider.of<class_prod_desc>(context, listen: false);
+
+      // If initialQuantity is provided, set it, otherwise reset to default
+      if (widget.initialQuantity != null && widget.initialQuantity! > 0) {
+        prodDescProvider.set_quantity(widget.initialQuantity!);
+      } else {
+        prodDescProvider.reset_quantity();
+      }
     });
   }
 
@@ -87,11 +95,7 @@ class _product_descriptionState extends State<product_description> {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => bottom_nav_bar(),
-                                  ));
+                              Navigator.pop(context);
                             },
                             child: Icon(
                                 color: myColors.secondary_color,
@@ -115,15 +119,15 @@ class _product_descriptionState extends State<product_description> {
                           },
                           child: badges.Badge(
                             position:
-                                badges.BadgePosition.topEnd(end: -10, top: -10),
+                            badges.BadgePosition.topEnd(end: -10, top: -10),
                             badgeAnimation: badges.BadgeAnimation.slide(),
                             badgeContent: Text(
                               instance_cart_provider.cart_items.length >= 1
                                   ? instance_cart_provider.cart_items.length
-                                      .toString()
+                                  .toString()
                                   : "",
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                              TextStyle(color: Colors.white, fontSize: 18),
                             ),
                             child: Icon(
                               Icons.shopping_bag,
@@ -296,12 +300,6 @@ class _product_descriptionState extends State<product_description> {
                                   GestureDetector(
                                     onTap: () {
                                       vm.quantity_decrement();
-
-                                      // if (quantity > 1) {
-                                      //   setState(() {
-                                      //     quantity--;
-                                      //   });
-                                      // }
                                     },
                                     child: Container(
                                       width: 35,
@@ -317,7 +315,7 @@ class _product_descriptionState extends State<product_description> {
                                   //number
                                   Padding(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
+                                    EdgeInsets.symmetric(horizontal: 15),
                                     child: Text(
                                       vm.quantity.toString(),
                                       style: TextStyle(
@@ -330,15 +328,12 @@ class _product_descriptionState extends State<product_description> {
                                   GestureDetector(
                                     onTap: () {
                                       vm.quantity_increment();
-                                      // setState(() {
-                                      //   quantity++;
-                                      // });
                                     },
                                     child: Container(
                                       width: 35,
                                       height: 35,
                                       child:
-                                          Icon(color: Colors.white, Icons.add),
+                                      Icon(color: Colors.white, Icons.add),
                                       decoration: BoxDecoration(
                                           color: myColors.primary_color,
                                           shape: BoxShape.circle),
@@ -366,7 +361,6 @@ class _product_descriptionState extends State<product_description> {
                         bool connected = await hasInternetConnection();
                         print('Internet connection status: $connected');
 
-
                         if (!connected) {
                           // If no internet, show the no internet message and exit
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -393,6 +387,8 @@ class _product_descriptionState extends State<product_description> {
                         int finalprice = (price ?? 0) * (instance_prod_desc_provider.quantity ?? 0);
                         final item = {
                           'name': widget.name,
+                          'generic': widget.generic,
+                          'description': widget.description,
                           'image': widget.image,
                           'price': widget.price,
                           'size': widget.size,

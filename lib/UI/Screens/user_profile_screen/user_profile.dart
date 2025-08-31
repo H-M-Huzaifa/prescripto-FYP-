@@ -50,11 +50,10 @@ class _user_profileState extends State<user_profile> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        color: myColors.primary_color,
-                        Icons.arrow_back_ios_new,
-                        size: size.w * 0.06,
+                      SizedBox(
+                        width: size.w * 0.06, // Same width as the original icon
                       ),
+
                       Text(
                         "My Profile",
                         style: TextStyle(
