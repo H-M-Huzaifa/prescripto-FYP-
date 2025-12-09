@@ -1,9 +1,3 @@
-Perfect! We can **update your README** to proudly showcase your **1st award-winning achievement** at CECOS University Open House 2025. Like the license and standee poster, we’ll embed the award image using Markdown.
-
-Here’s the **final full README** including this:
-
----
-
 # **Prescripto**
 
 Welcome to **Prescripto**, an intelligent mobile application designed to streamline medicine ordering and prescription understanding for both users and pharmacies. Built with a modern Flutter interface and powered by deep learning models, Prescripto enables users to upload prescriptions, extract medicine names instantly, and receive chatbot-based assistance about medicine usage, dosage, and general information.
