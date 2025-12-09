@@ -161,7 +161,7 @@ Place your ONNX model in the `assets/models/` folder (if applicable).
 
 This project is licensed by **K2X Tech Company**.
 
-![K2X Tech License](assets/images/license)
+![K2X Tech License](assets/images/license.png)
 
 
 ---
@@ -170,7 +170,7 @@ This project is licensed by **K2X Tech Company**.
 
 Here’s a preview of the Prescripto project standee poster:
 
-![Prescripto Standee Poster](assets/images/standee)
+![Prescripto Standee Poster](assets/images/standee.webp)
 
 
 ---
@@ -179,5 +179,5 @@ Here’s a preview of the Prescripto project standee poster:
 
 🏆 **1st Award Winner – CECOS University Open House 2025 (Final Year Project)**
 
-![CECOS Open House Award](assets/images/certificate)
+![CECOS Open House Award](assets/images/certificate.jpeg)
 
