@@ -161,8 +161,8 @@ Place your ONNX model in the `assets/models/` folder (if applicable).
 
 This project is licensed by **K2X Tech Company**.
 
-![K2X Tech License](assets/images/license.png)
-*(Make sure the image `license.png` is uploaded to the `assets/images/` folder in your repository)*
+![K2X Tech License](assets/images/license)
+
 
 ---
 
@@ -170,8 +170,8 @@ This project is licensed by **K2X Tech Company**.
 
 Here’s a preview of the Prescripto project standee poster:
 
-![Prescripto Standee Poster](assets/images/standee_poster.png)
-*(Replace the path with your actual image location in the repo)*
+![Prescripto Standee Poster](assets/images/standee)
+
 
 ---
 
@@ -179,21 +179,5 @@ Here’s a preview of the Prescripto project standee poster:
 
 🏆 **1st Award Winner – CECOS University Open House 2025 (Final Year Project)**
 
-![CECOS Open House Award](assets/images/cecose_award.png)
-*(Replace the path with your actual award image location in the repo)*
+![CECOS Open House Award](assets/images/certificate)
 
----
-
-This **README is fully GitHub-ready**, visually highlighting:
-
-* AI features & chatbot
-* Flutter + MVVM architecture
-* Standee poster
-* License from K2X Tech
-* 1st award recognition
-
----
-
-If you want, I can **also create a fully polished Markdown version with sample screenshots, chatbot GIFs, and ONNX workflow diagrams** so it looks **like a professional showcase for GitHub and FYP submission**.
-
-Do you want me to do that next?
