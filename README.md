@@ -61,6 +61,7 @@ Watch a short promo of the project below (GIF preview included; full video can b
 ## Screenshots
 
 <p align="center">
+  <img src="assets/images/logo.png" width="300">
   <img src="assets/images/license.png" width="300">
   <img src="assets/images/certificate.jpeg" width="300">
 </p>
