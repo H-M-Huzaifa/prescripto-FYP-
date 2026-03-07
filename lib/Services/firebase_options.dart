@@ -41,7 +41,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCOhq3A7zr1NTdJcZWZ5vzjceIDK7BPohk',
+    apiKey: 'your apii key',
     appId: '1:613995925532:web:7fa5b2cf361fde6b340fd9',
     messagingSenderId: '613995925532',
     projectId: 'prescripto-b77f2',
