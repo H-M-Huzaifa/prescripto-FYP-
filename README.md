@@ -2,29 +2,57 @@
 
 Final Year Project — ranked **1st in the Software Engineering Department at CECOS University**  
 
-**Prescripto** is an intelligent mobile application that streamlines medicine ordering and prescription interpretation for users and pharmacies. Built in Flutter and powered by applied AI, the app allows users to upload prescriptions, extract medicine names, and interact with a domain-specific chatbot for guidance on medicines, dosage, and general information.  
+**Prescripto** is an intelligent mobile application that streamlines medicine ordering and prescription interpretation for users and pharmacies. Built in Flutter and powered by applied AI, the app allows users to upload prescriptions, extract medicine names, and interact with a domain-specific chatbot for guidance on medicines, dosage, and general information.
 
 ---
 
-## Prescripto — Prescription Digitization Platform
+## Features
 
-A healthcare application designed to help pharmacies and patients process handwritten prescriptions more reliably by extracting medicine names from prescription images.
+### AI-Powered Prescription Classification
+* Upload a prescription image and let the app automatically extract medicine names.
+* Uses fine-tuned NLP models (ONNX) for high-accuracy classification.
+* Reduces manual errors and speeds up order placement.
 
-**Key components:**
+### Medicine Assistant Chatbot
+* Ask questions about medicine usage, purpose, dosage guidelines, or precautions.
+* Provides helpful, user-friendly responses based on curated medical information.
+* *(Note: the chatbot does not provide medical diagnosis — only general information.)*
 
-- CRNN model for handwritten prescription recognition  
-- Confidence-based fallback to Azure Vision API for improved reliability  
-- NLP pipeline to normalize and match medicine names against a medicine dataset  
-- AI-powered chatbot trained on medicine-related knowledge to assist users with prescription queries  
-- Flutter mobile application with a custom UX workflow for scanning prescriptions and browsing medicines
+### Intuitive & Modern UI
+* Clean, minimal, and easy-to-navigate interface.
+* Smooth transitions and optimized layout for all screen sizes.
+* Designed using UX best practices from Google UX Certification.
 
-The system simplifies prescription interpretation and supports digital workflows for pharmacies and online medicine ordering platforms.
+### Smart Medicine Ordering
+* Extracted medicines can be added directly to the cart.
+* Users can edit the list, customize quantities, and confirm orders.
+* Seamless checkout experience.
+
+### Secure User Authentication
+* Safe login and signup process.
+* Handles user identity, order history, and prescription records securely.
+
+### Order Tracking
+* Track order status from “Pending” to “Completed.”
+* The pharmacy can update order progress in real-time.
+
+### Prescription Upload History
+* Stores previous prescriptions.
+* Users can reorder frequently used medicines with one tap.
+
+### MVVM Architecture with Provider
+* Clean separation of UI, business logic, and data.
+* Ensures maintainability and scalability of the project.
+
+### Extensible AI Pipeline
+* ONNX model integration for prescription-level NLP classification.
+* Future-ready architecture to plug in more advanced models.
 
 ---
 
 ## Prescripto in Action
 
-Demo GIF showcasing prescription upload, medicine extraction, and chatbot interaction:
+Demo of the app in action (replace the GIF below with your own video/GIF):
 
 <p align="center">
   <img src="assets/gif/demo.gif" width="600">
@@ -36,48 +64,6 @@ Demo GIF showcasing prescription upload, medicine extraction, and chatbot intera
   <img src="assets/images/screenshot1.png" width="300">
   <img src="assets/images/screenshot2.png" width="300">
 </p>
-
----
-
-## Features
-
-### AI-Powered Prescription Processing
-- Upload prescription images and automatically extract medicine names.
-- Reduces manual errors and speeds up order placement.
-
-### Medicine Assistant Chatbot
-- Provides guidance on medicine usage, purpose, dosage, and precautions.
-- Simplifies medical guidance for users unfamiliar with prescriptions.
-- *(Informational only, not for medical diagnosis.)*
-
-### Intuitive & Modern UI
-- Clean, minimal, and easy-to-navigate interface.
-- Smooth transitions and optimized layout for all screen sizes.
-
-### Smart Medicine Ordering
-- Add extracted medicines to the cart, customize quantities, and checkout.
-- Reorder frequently used medicines with one tap.
-- Track order status in real-time.
-
-### Secure Authentication
-- Safe login and signup process.
-- Handles user identity, order history, and prescription records securely.
-
-### MVVM Architecture
-- Separation of UI, business logic, and data for maintainability and scalability.
-- Built with Provider for state management.
-
----
-
-## High-Level Workflow
-
-1. User logs in and uploads a prescription image.
-2. CRNN model extracts text from handwriting.
-3. NLP pipeline normalizes text and matches medicine names from the dataset.
-4. User can query the chatbot for guidance.
-5. Extracted medicines can be added to the cart.
-6. User places the order → pharmacy updates status.
-7. Live order tracking available for the user.
 
 ---
 
@@ -97,12 +83,25 @@ Demo GIF showcasing prescription upload, medicine extraction, and chatbot intera
 
 ---
 
+## How It Works (High-Level Flow)
+
+1. User logs in and uploads a prescription image.
+2. Text is extracted → passed to the NLP model.
+3. AI model extracts the medicine names.
+4. User can ask the chatbot about each medicine:
+   - Usage
+   - Purpose
+   - General dosage
+   - Side effects / precautions
+5. Medicines can be added to the cart.
+6. User places order → pharmacy updates status.
+7. User tracks order status live.
+
+---
+
 ## Installation
 
-Clone the repository:
+Clone the project:
 
 ```bash
 git clone https://github.com/your-username/prescripto.git
-cd prescripto
-flutter pub get
-flutter run
