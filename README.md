@@ -44,25 +44,33 @@ Final Year Project — ranked **1st in the Software Engineering Department at CE
 * Clean separation of UI, business logic, and data.
 * Ensures maintainability and scalability of the project.
 
-### Extensible AI Pipeline
-* ONNX model integration for prescription-level NLP classification.
-* Future-ready architecture to plug in more advanced models.
+---
+
+## Prescripto — Promo Video
+
+Watch a short promo of the project below (GIF preview included; full video can be downloaded or linked):
+
+<p align="center">
+  <img src="assets/gif/promo.gif" width="600" alt="Prescripto Promo Video Preview">
+</p>
+
+**Full video:** [Download / Watch Full Promo Video](assets/gif/prescripto_promo.mp4)
 
 ---
 
-## Prescripto in Action
-
-Demo of the app in action (replace the GIF below with your own video/GIF):
-
-<p align="center">
-  <img src="assets/gif/demo.gif" width="600">
-</p>
-
-### Screenshots
+## Screenshots
 
 <p align="center">
   <img src="assets/images/license.png" width="300">
-  <img src="assets/images/screenshot.png" width="300">
+  <img src="assets/images/certificate.jpeg" width="300">
+</p>
+
+---
+
+## Standee Poster
+
+<p align="center">
+  <img src="assets/images/standee.webp" width="400" alt="Prescripto Standee Poster">
 </p>
 
 ---
@@ -94,7 +102,7 @@ Demo of the app in action (replace the GIF below with your own video/GIF):
    - General dosage
    - Side effects / precautions
 5. Medicines can be added to the cart.
-6. User places order → pharmacy updates status.
+6. User places the order → pharmacy updates status.
 7. User tracks order status live.
 
 ---
