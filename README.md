@@ -61,8 +61,8 @@ Demo of the app in action (replace the GIF below with your own video/GIF):
 ### Screenshots
 
 <p align="center">
-  <img src="assets/images/screenshot1.png" width="300">
-  <img src="assets/images/screenshot2.png" width="300">
+  <img src="assets/images/license.png" width="300">
+  <img src="assets/images/screenshot.png" width="300">
 </p>
 
 ---
