@@ -17,7 +17,7 @@ class Chatbot extends StatefulWidget {
 
 class _ChatbotState extends State<Chatbot> {
   // SECURITY: Move this to environment variables or secure storage
-  final String apiKey = "AIzaSyCiUkIC1fG3NK4iiqHt87Ce5dh1JIsUdOY"; // Replace with your actual API key
+  final String apiKey = "your api key"; // Replace with your actual API key
 
   // Try these models in order if one doesn't work:
   // Option 1: gemini-1.5-flash (fastest)
