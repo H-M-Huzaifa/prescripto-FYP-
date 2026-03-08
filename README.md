@@ -48,7 +48,7 @@ Final Year Project — ranked **1st in the Software Engineering Department at CE
 
 ## Prescripto — Promo Video
 
-Watch a short promo of the project below (GIF preview included; full video can be downloaded or linked):
+Watch a short promo of the project below:
 
 <p align="center">
   <img src="assets/images/promo.gif" width="600" alt="Prescripto Promo Video Preview">
